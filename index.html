@@ -38,6 +38,7 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+      touch-action: manipulation;
     }
 
     button:hover {
@@ -254,6 +255,7 @@
     showTodayEmoji();
     function showTodayEmoji() {
       handleClick('today');
+      document.title = todayEmojiCache.length > 0 ? todayEmojiCache[0] : 'emoji wildcard';
     }
   </script>
 </body>
