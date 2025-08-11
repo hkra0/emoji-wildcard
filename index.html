@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>emoji wildcard</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .emoji {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      background: #333;
+      color: white;
+      border: 1px solid transparent;
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    button:hover {
+      background: #555;
+    }
+
+    svg {
+      width: 1.5em;
+      height: 1.5em;
+      fill: currentColor;
+    }
+
+    /* --- light mode --- */
+    @media (prefers-color-scheme: light) {
+      body {
+        background-color: #f4f4f4;
+        color: #222;
+      }
+
+      button {
+        background: #e0e0e0;
+        color: #222;
+        border-color: #ccc;
+      }
+
+      button:hover {
+        background: #c7c7c7;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="emoji" id="emojiDisplay">🍵</div>
+  <div>
+    <button onclick="handleClick('today')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <path
+          d="M128 0c17.7 0 32 14.3 32 32l0 32 128 0 0-32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 32 32 0c35.3 0 64 28.7 64 64l0 288c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 128C0 92.7 28.7 64 64 64l32 0 0-32c0-17.7 14.3-32 32-32zm0 256c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-64c0-17.7-14.3-32-32-32l-64 0z" />
+      </svg>
+    </button>
+    <button onclick="handleClick('any')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path
+          d="M403.8 34.4c12-5 25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64c-9.2 9.2-22.9 11.9-34.9 6.9S384 204.9 384 192l0-32-32 0c-10.1 0-19.6 4.7-25.6 12.8l-32.4 43.2-40-53.3 21.2-28.3C293.3 110.2 321.8 96 352 96l32 0 0-32c0-12.9 7.8-24.6 19.8-29.6zM154 296l40 53.3-21.2 28.3C154.7 401.8 126.2 416 96 416l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c10.1 0 19.6-4.7 25.6-12.8L154 296zM438.6 470.6c-9.2 9.2-22.9 11.9-34.9 6.9S384 460.9 384 448l0-32-32 0c-30.2 0-58.7-14.2-76.8-38.4L121.6 172.8c-6-8.1-15.5-12.8-25.6-12.8l-64 0c-17.7 0-32-14.3-32-32S14.3 96 32 96l64 0c30.2 0 58.7 14.2 76.8 38.4L326.4 339.2c6 8.1 15.5 12.8 25.6 12.8l32 0 0-32c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64z" />
+      </svg>
+    </button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+  <script>
+    const emojiData = {
+      "Animals & Nature": {
+        "Mammals & Marsupials": ["🐵", "🐒", "🦍", "🦧", "🐶", "🐕", "🦮", "🐕‍🦺", "🐩", "🐺", "🦊", "🦝", "🐱", "🐈", "🐈‍⬛", "🦁", "🐯", "🐅", "🐆", "🐴", "🫎", "🫏", "🐎", "🦄", "🦓", "🦌", "🦬", "🐮", "🐂", "🐃", "🐄", "🐷", "🐖", "🐗", "🐽", "🐏", "🐑", "🐐", "🐪", "🐫", "🦙", "🦒", "🐘", "🦣", "🦏", "🦛", "🐭", "🐁", "🐀", "🐹", "🐰", "🐇", "🐿️", "🦫", "🦔", "🦇", "🐻", "🐻‍❄️", "🐨", "🐼", "🦥", "🦦", "🦨", "🦘", "🦡", "🐾"],
+        "Birds": ["🦃", "🐔", "🐓", "🐣", "🐤", "🐥", "🐦", "🐧", "🕊️", "🦅", "🦆", "🦢", "🦉", "🦤", "🪶", "🦩", "🦚", "🦜", "🪽", "🐦‍⬛", "🪿", "🐦‍🔥", "🪹", "🪺"],
+        "Marine & Reptiles": ["🐸", "🐊", "🐢", "🦎", "🐍", "🐲", "🐉", "🦕", "🦖", "🐳", "🐋", "🐬", "🦭", "🐟", "🐠", "🐡", "🦈", "🐙", "🐚", "🪸", "🪼", "🦀", "🦞", "🦐", "🦑", "🦪"],
+        "Bugs": ["🐌", "🦋", "🐛", "🐜", "🐝", "🪲", "🐞", "🦗", "🪳", "🕷️", "🕸️", "🦂", "🦟", "🪰", "🪱", "🦠"],
+        "Plants, Flowers & Nature": ["💐", "🌸", "💮", "🪷", "🏵️", "🌹", "🥀", "🌺", "🌻", "🌼", "🌷", "🪻", "🌱", "🪴", "🌲", "🌳", "🪾", "🌴", "🌵", "🌾", "🌿", "☘️", "🍀", "🍁", "🍂", "🍃", "🍄", "🪨", "🪵"],
+        "Sky & Weather": ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘", "🌙", "🌚", "🌛", "🌜", "☀️", "🌝", "🌞", "🪐", "⭐", "🌟", "🌠", "🌌", "☁️", "⛅", "⛈️", "🌤️", "🌥️", "🌦️", "🌧️", "🌨️", "🌩️", "🌪️", "🌫️", "🌬️", "🌀", "🌈", "🌂", "☂️", "☔", "⛱️", "⚡", "❄️", "☃️", "⛄", "☄️", "🔥", "💧", "🌊"]
+      },
+      "Food & Drink": {
+        "Fruits": ["🍇", "🍈", "🍉", "🍊", "🍋", "🍋‍🟩", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🫐", "🥝", "🍅", "🫒", "🥥"],
+        "Vegetables": ["🥑", "🍆", "🥔", "🥕", "🌽", "🌶️", "🫑", "🥒", "🥬", "🥦", "🧄", "🧅", "🥜", "🫘", "🌰", "🫚", "🫛", "🫜", "🍄‍🟫"],
+        "Prepared Foods": ["🍞", "🥐", "🥖", "🫓", "🥨", "🥯", "🥞", "🧇", "🧀", "🍖", "🍗", "🥩", "🥓", "🍔", "🍟", "🍕", "🌭", "🥪", "🌮", "🌯", "🫔", "🥙", "🧆", "🥚", "🍳", "🥘", "🍲", "🫕", "🥣", "🥗", "🍿", "🧈", "🧂", "🥫", "🍝"],
+        "Asian Foods": ["🍱", "🍘", "🍙", "🍚", "🍛", "🍜", "🍠", "🍢", "🍣", "🍤", "🍥", "🥮", "🍡", "🥟", "🥠", "🥡"],
+        "Sweets & Desserts": ["🍦", "🍧", "🍨", "🍩", "🍪", "🎂", "🍰", "🧁", "🥧", "🍫", "🍬", "🍭", "🍮", "🍯"],
+        "Drinks & Dishware": ["🍼", "🥛", "☕", "🫖", "🍵", "🍶", "🍾", "🍷", "🍸", "🍹", "🍺", "🍻", "🥂", "🥃", "🫗", "🥤", "🧋", "🧃", "🧉", "🥢", "🍽️", "🍴", "🥄", "🔪", "🫙", "🏺"],
+        "Events & Celebrations": ["🎃", "🎄", "🎆", "🎇", "🧨", "✨", "🎈", "🎉", "🎊", "🎋", "🎍", "🎎", "🎏", "🎐", "🎑", "🧧", "🎁", "🎟️", "🎫", "🏮", "🪔"],
+        "Sports & Awards": ["🎖️", "🏆", "🏅", "🥇", "🥈", "🥉", "⚽", "⚾", "🥎", "🏀", "🏐", "🏈", "🏉", "🎾", "🥏", "🎳", "🏏", "🏑", "🏒", "🥍", "🏓", "🏸", "🥊", "🥋", "🥅", "⛳", "⛸️", "🎣", "🤿", "🎽", "🎿", "🛷", "🥌", "🎯"],
+        "Games & Culture": ["🪀", "🪁", "🔫", "🎱", "🔮", "🪄", "🎮", "🕹️", "🎰", "🎲", "🧩", "🪅", "🪩", "🪆", "♠️", "♥️", "♦️", "♣️", "♟️", "🃏", "🀄", "🎴", "🎭", "🖼️", "🎨"]
+      },
+      "Travel & Places": {
+        "Maps & Geography": ["🌍", "🌎", "🌏", "🌐", "🗺️", "🗾", "🧭", "🏔️", "⛰️", "🌋", "🗻", "🏕️", "🏖️", "🏜️", "🏝️", "🏞️"],
+        "Buildings & Places": ["🏟️", "🏛️", "🏗️", "🧱", "🛖", "🏘️", "🏚️", "🏠", "🏡", "🏢", "🏣", "🏤", "🏥", "🏦", "🏨", "🏩", "🏪", "🏫", "🏬", "🏭", "🏯", "🏰", "💒", "🗼", "🗽", "⛪", "🕌", "🛕", "🕍", "⛩️", "🕋", "⛲", "⛺", "🌁", "🌃", "🏙️", "🌄", "🌅", "🌆", "🌇", "🌉", "♨️", "🎠", "🛝", "🎡", "🎢", "💈", "🎪", "🛎️", "🗿"],
+        "Land Travel": ["🚂", "🚃", "🚄", "🚅", "🚆", "🚇", "🚈", "🚉", "🚊", "🚝", "🚞", "🚋", "🚌", "🚍", "🚎", "🚐", "🚑", "🚒", "🚓", "🚔", "🚕", "🚖", "🚗", "🚘", "🚙", "🛻", "🚚", "🚛", "🚜", "🏎️", "🏍️", "🛵", "🦽", "🦼", "🛺", "🚲", "🛴", "🛹", "🛼", "🚏", "🛣️", "🛤️", "🛢️", "⛽", "🛞", "🚨", "🚥", "🚦", "🛑", "🚧"],
+        "Air & Sea Travel": ["⚓", "🛟", "⛵", "🛶", "🚤", "🛳️", "⛴️", "🛥️", "🚢", "✈️", "🛩️", "🛫", "🛬", "🪂", "💺", "🚁", "🚟", "🚠", "🚡", "🛰️", "🚀", "🛸"]
+      },
+      "Object Emoji": {
+        "Clothing & Appearance": ["🎀", "🎗️", "👓", "🕶️", "🥽", "🥼", "🦺", "👔", "👕", "👖", "🧣", "🧤", "🧥", "🧦", "👗", "👘", "🥻", "🩱", "🩲", "🩳", "👙", "👚", "🪭", "👛", "👜", "👝", "🛍️", "🎒", "🩴", "👞", "👟", "🥾", "🥿", "👠", "👡", "🩰", "👢", "🪮", "👑", "👒", "🎩", "🎓", "🧢", "🪖", "⛑️", "📿", "💄", "💍", "💎", "🦯", "🧿"],
+        "Music & Sound": ["🔇", "🔈", "🔉", "🔊", "📢", "📣", "📯", "🔔", "🔕", "🎼", "🎵", "🎶", "🎙️", "🎚️", "🎛️", "🎤", "🎧", "📻", "🎷", "🪗", "🎸", "🎹", "🎺", "🎻", "🪕", "🥁", "🪘", "🪇", "🪈", "🪉"],
+        "IT & AV": ["📱", "📲", "☎️", "📞", "📟", "📠", "🔋", "🪫", "🔌", "💻", "🖥️", "🖨️", "⌨️", "🖱️", "🖲️", "💽", "💾", "💿", "📀", "🎥", "🎞️", "📽️", "🎬", "📺", "📷", "📸", "📹", "📼"],
+        "Office & Stationery": ["📔", "📕", "📖", "📗", "📘", "📙", "📚", "📓", "📒", "📃", "📜", "📄", "📰", "🗞️", "📑", "🔖", "🏷️", "✉️", "📧", "📨", "📩", "📤", "📥", "📦", "📫", "📪", "📬", "📭", "📮", "🗳️", "✏️", "✒️", "🖋️", "🖊️", "🖌️", "🖍️", "📝", "💼", "📁", "📂", "🗂️", "📅", "📆", "🗒️", "🗓️", "📇", "📈", "📉", "📊", "📋", "📌", "📍", "📎", "🖇️", "📏", "📐", "✂️", "🗃️", "🗄️", "🗑️", "🪪"],
+        "Money & Time": ["⌛", "⏳", "⌚", "⏰", "⏱️", "⏲️", "🕰️", "🕛", "🕧", "🕐", "🕜", "🕑", "🕝", "🕒", "🕞", "🕓", "🕟", "🕔", "🕠", "🕕", "🕡", "🕖", "🕢", "🕗", "🕣", "🕘", "🕤", "🕙", "🕥", "🕚", "🕦", "🧮", "💰", "🪙", "💴", "💵", "💶", "💷", "💸", "💳", "🧾", "💹", "Tools, Household Items & Other", "🧳", "🌡️", "🧸", "🧶", "🪢", "🔍", "🔎", "🕯️", "💡", "🔦", "🔒", "🔓", "🔏", "🔐", "🔑", "🗝️", "🔨", "🪓", "⛏️", "⚒️", "🛠️", "🗡️", "⚔️", "💣", "🪃", "🏹", "🛡️", "🪚", "🔧", "🪛", "🔩", "⚙️", "🗜️", "⚖️", "🔗", "⛓️‍💥", "⛓️", "🪝", "🧰", "🧲", "🪜", "🪏", "⚗️", "🧪", "🧫", "🔬", "🔭", "📡", "💉", "🩹", "🩼", "🩺", "🩻", "🚪", "🪞", "🪟", "🛏️", "🛋️", "🪑", "🚽", "🪠", "🚿", "🛁", "🪤", "🪒", "🧴", "🧷", "🧹", "🧺", "🧻", "🪣", "🧼", "🫧", "🪥", "🧽", "🧯", "🛒", "🚬", "⚰️", "🪦", "⚱️", "🪧"]
+      }
+    };
+
+    function getAllEmojis(data) {
+      let emojis = [];
+      for (const key in data) {
+        if (Array.isArray(data[key])) {
+          emojis = emojis.concat(data[key]);
+        } else if (typeof data[key] === 'object') {
+          emojis = emojis.concat(getAllEmojis(data[key]));
+        }
+      }
+      return emojis;
+    }
+
+    const allEmojis = getAllEmojis(emojiData);
+    let currentCategory = null;
+    let clickCount = 0;
+    let lastClickTime = 0;
+    let lastMode = '';
+    let todayEmojiCache = [];
+
+    function getCategory(emoji, data = emojiData, path = []) {
+      for (const key in data) {
+        if (Array.isArray(data[key]) && data[key].includes(emoji)) {
+          return [...path, key].join(' > ');
+        } else if (typeof data[key] === 'object') {
+          const result = getCategory(emoji, data[key], [...path, key]);
+          if (result) return result;
+        }
+      }
+      return null;
+    }
+
+    function getEmojisInCategory(categoryPath, data = emojiData) {
+      const pathParts = categoryPath.split(' > ');
+      let current = data;
+
+      for (const part of pathParts) {
+        if (current[part]) {
+          current = current[part];
+        } else {
+          return [];
+        }
+      }
+
+      if (Array.isArray(current)) {
+        return current;
+      } else if (typeof current === 'object') {
+        return getAllEmojis(current);
+      }
+
+      return [];
+    }
+
+    function getTodayIndex() {
+      const today = new Date();
+      const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+      Math.seedrandom(seed);
+      return [
+        Math.floor(Math.random() * allEmojis.length),
+        Math.floor(Math.random() * allEmojis.length),
+        Math.floor(Math.random() * allEmojis.length)
+      ];
+    }
+
+    function handleClick(mode) {
+      const now = Date.now();
+      if (mode !== lastMode || now - lastClickTime > 300) {
+        clickCount = 0;
+        document.getElementById("emojiDisplay").textContent = '';
+        if (mode === 'today') todayEmojiCache = [];
+      }
+      lastClickTime = now;
+      lastMode = mode;
+
+      const container = document.getElementById("emojiDisplay");
+      const currentEmojis = Array.from(container.children).map(e => e.textContent);
+
+      if (mode === 'today') {
+        clickCount = Math.min(clickCount + 1, 3);
+        if (todayEmojiCache.length === 0) {
+          const indexes = getTodayIndex();
+          todayEmojiCache.push(allEmojis[indexes[0]]);
+          todayEmojiCache.push(allEmojis[(indexes[1]) % allEmojis.length]);
+          todayEmojiCache.push(allEmojis[(indexes[2]) % allEmojis.length]);
+        }
+        displayEmojis(todayEmojiCache.slice(0, clickCount));
+        if (clickCount > 0) {
+          currentCategory = getCategory(todayEmojiCache[clickCount - 1]);
+        }
+      } else if (mode === 'same') {
+        if (currentEmojis.length === 0) return;
+        const lastEmoji = currentEmojis[currentEmojis.length - 1];
+        currentCategory = getCategory(lastEmoji);
+        if (!currentCategory) return;
+        if (currentEmojis.length >= 3) return;
+
+        const categoryEmojis = getEmojisInCategory(currentCategory);
+        if (categoryEmojis.length === 0) return;
+
+        const emoji = categoryEmojis[Math.floor(Math.random() * categoryEmojis.length)];
+        appendEmoji(emoji);
+        clickCount = currentEmojis.length + 1;
+      } else if (mode === 'any') {
+        if (currentEmojis.length >= 3) return;
+        const emoji = allEmojis[Math.floor(Math.random() * allEmojis.length)];
+        appendEmoji(emoji);
+        currentCategory = getCategory(emoji);
+        clickCount = currentEmojis.length + 1;
+      }
+    }
+
+    function displayEmojis(list) {
+      const container = document.getElementById("emojiDisplay");
+      container.innerHTML = '';
+      list.forEach(e => {
+        const span = document.createElement('span');
+        span.textContent = e;
+        container.appendChild(span);
+      });
+    }
+
+    function appendEmoji(e) {
+      const container = document.getElementById("emojiDisplay");
+      const span = document.createElement('span');
+      span.textContent = e;
+      container.appendChild(span);
+    }
+
+    showTodayEmoji();
+    function showTodayEmoji() {
+      handleClick('today');
+    }
+  </script>
+</body>
+
+</html>
