@@ -306,7 +306,7 @@
       let children = container.childNodes;
       let displayedEmojis = Array.from(children).map(e => e.textContent);
       if (displayedEmojis.length > 0) {
-        document.title = displayedEmojis;
+        document.title = displayedEmojis.join('');
       }
       lastClickTime = now;
     }
