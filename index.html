@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>emoji wildcard</title>
+  <title>🍵</title>
   <style>
     body {
       background-color: #111;
@@ -112,7 +112,9 @@
         "Prepared Foods": ["🍞", "🥐", "🥖", "🫓", "🥨", "🥯", "🥞", "🧇", "🧀", "🍖", "🍗", "🥩", "🥓", "🍔", "🍟", "🍕", "🌭", "🥪", "🌮", "🌯", "🫔", "🥙", "🧆", "🥚", "🍳", "🥘", "🍲", "🫕", "🥣", "🥗", "🍿", "🧈", "🧂", "🥫", "🍝"],
         "Asian Foods": ["🍱", "🍘", "🍙", "🍚", "🍛", "🍜", "🍠", "🍢", "🍣", "🍤", "🍥", "🥮", "🍡", "🥟", "🥠", "🥡"],
         "Sweets & Desserts": ["🍦", "🍧", "🍨", "🍩", "🍪", "🎂", "🍰", "🧁", "🥧", "🍫", "🍬", "🍭", "🍮", "🍯"],
-        "Drinks & Dishware": ["🍼", "🥛", "☕", "🫖", "🍵", "🍶", "🍾", "🍷", "🍸", "🍹", "🍺", "🍻", "🥂", "🥃", "🫗", "🥤", "🧋", "🧃", "🧉", "🥢", "🍽️", "🍴", "🥄", "🔪", "🫙", "🏺"],
+        "Drinks & Dishware": ["🍼", "🥛", "☕", "🫖", "🍵", "🍶", "🍾", "🍷", "🍸", "🍹", "🍺", "🍻", "🥂", "🥃", "🫗", "🥤", "🧋", "🧃", "🧉", "🥢", "🍽️", "🍴", "🥄", "🔪", "🫙", "🏺"]
+      },
+      "Activity": {
         "Events & Celebrations": ["🎃", "🎄", "🎆", "🎇", "🧨", "✨", "🎈", "🎉", "🎊", "🎋", "🎍", "🎎", "🎏", "🎐", "🎑", "🧧", "🎁", "🎟️", "🎫", "🏮", "🪔"],
         "Sports & Awards": ["🎖️", "🏆", "🏅", "🥇", "🥈", "🥉", "⚽", "⚾", "🥎", "🏀", "🏐", "🏈", "🏉", "🎾", "🥏", "🎳", "🏏", "🏑", "🏒", "🥍", "🏓", "🏸", "🥊", "🥋", "🥅", "⛳", "⛸️", "🎣", "🤿", "🎽", "🎿", "🛷", "🥌", "🎯"],
         "Games & Culture": ["🪀", "🪁", "🔫", "🎱", "🔮", "🪄", "🎮", "🕹️", "🎰", "🎲", "🧩", "🪅", "🪩", "🪆", "♠️", "♥️", "♦️", "♣️", "♟️", "🃏", "🀄", "🎴", "🎭", "🖼️", "🎨"]
@@ -133,77 +135,148 @@
       }
     };
 
-    function getAllEmojis(data) {
-      let emojis = [];
-      for (const key in data) {
-        if (Array.isArray(data[key])) {
-          emojis = emojis.concat(data[key]);
-        } else if (typeof data[key] === 'object') {
-          emojis = emojis.concat(getAllEmojis(data[key]));
-        }
+    const emojiWeights = {
+      "Smiley": {
+        "total": 0.1,
+        "Smiling & Affectionate": 0.25,
+        "Tongues, Hands & Accessories": 0.1,
+        "Neutral & Skeptical": 0.2,
+        "Sleepy & Unwell": 0.15,
+        "Concerned & Negative": 0.2,
+        "Costume, Creature & Animal": 0.1
+      },
+      "Animals & Nature": {
+        "total": 0.3,
+        "Mammals & Marsupials": 0.13,
+        "Birds": 0.15,
+        "Marine & Reptiles": 0.12,
+        "Bugs": 0.1,
+        "Plants, Flowers & Nature": 0.3,
+        "Sky & Weather": 0.2
+      },
+      "Food & Drink": {
+        "total": 0.3,
+        "Fruits": 0.2,
+        "Vegetables": 0.2,
+        "Prepared Foods": 0.2,
+        "Asian Foods": 0.1,
+        "Sweets & Desserts": 0.1,
+        "Drinks & Dishware": 0.2
+      },
+      "Activity": {
+        "total": 0.1,
+        "Events & Celebrations": 0.6,
+        "Sports & Awards": 0.2,
+        "Games & Culture": 0.2
+      },
+      "Travel & Places": {
+        "total": 0.15,
+        "Maps & Geography": 0.2,
+        "Buildings & Places": 0.3,
+        "Land Travel": 0.3,
+        "Air & Sea Travel": 0.2
+      },
+      "Object Emoji": {
+        "total": 0.05,
+        "Clothing & Appearance": 0.25,
+        "Music & Sound": 0.1,
+        "IT & AV": 0.1,
+        "Office & Stationery": 0.2,
+        "Money & Time": 0.1,
+        "Tools, Household Items & Other": 0.25
       }
-      return emojis;
-    }
+    };
 
-    const allEmojis = getAllEmojis(emojiData);
+    const CLICK_TIMEOUT = 300;
     let currentCategory = null;
+    let currentSubCategory = null;
     let clickCount = 0;
     let lastClickTime = 0;
     let lastMode = '';
     let todayEmojiCache = [];
 
-    function getCategory(emoji, data = emojiData, path = []) {
-      for (const key in data) {
-        if (Array.isArray(data[key]) && data[key].includes(emoji)) {
-          return [...path, key].join(' > ');
-        } else if (typeof data[key] === 'object') {
-          const result = getCategory(emoji, data[key], [...path, key]);
-          if (result) return result;
-        }
+    // choose key by weighted random
+    function weightedRandom(weightObj, seed = null) {
+      const weightRnd = new Math.seedrandom(seed);
+      const entries = Object.entries(weightObj).filter(([k]) => k !== "total");
+      let totalWeight = entries.reduce((sum, [, w]) => sum + w, 0);
+      let rnd = weightRnd() * totalWeight;
+      for (let [key, weight] of entries) {
+        rnd -= weight;
+        if (rnd <= 0) return key;
       }
-      return null;
     }
 
-    function getEmojisInCategory(categoryPath, data = emojiData) {
-      const pathParts = categoryPath.split(' > ');
-      let current = data;
+    // get a random emoji from an array
+    function randomFromArray(arr, seed = null) {
+      if (!arr || arr.length === 0) return '';
+      const rnd = new Math.seedrandom(seed);
+      return arr[Math.floor(rnd() * arr.length)];
+    }
 
-      for (const part of pathParts) {
-        if (current[part]) {
-          current = current[part];
+    // main draw function
+    let drawCount = 0;
+    function drawEmoji(seed = null) {
+      const emojiRnd = new Math.seedrandom(seed);
+      const now = Date.now();
+      // judge if timeout
+      if (now - lastClickTime > CLICK_TIMEOUT) {
+        drawCount = 0;
+        currentCategory = null;
+      }
+      drawCount++;
+      lastClickTime = now;
+      let chosenCategory;
+      let chosenSubCategory;
+      // first click: choose a random category and subcategory
+      if (drawCount === 1 || !currentCategory) {
+        chosenCategory = weightedRandom(
+          Object.fromEntries(
+            Object.entries(emojiWeights).map(([cat, obj]) => [cat, obj.total])
+          ), seed
+        );
+        chosenSubCategory = weightedRandom(emojiWeights[chosenCategory], seed);
+      } else {
+        // continuous clicks: choose from the same category or a different one
+        const diffProb = Math.pow(0.36, drawCount - 1);
+        if (emojiRnd() < diffProb || currentCategory === 'Smiley') {
+          // different category
+          const otherCats = Object.keys(emojiWeights).filter(c => c !== currentCategory);
+          const otherWeights = Object.fromEntries(otherCats.map(cat => [cat, emojiWeights[cat].total]));
+          chosenCategory = weightedRandom(otherWeights, seed);
+          chosenSubCategory = weightedRandom(emojiWeights[chosenCategory], seed);
         } else {
-          return [];
+          // same category
+          chosenCategory = currentCategory;
+          // choose subcategory
+          if (emojiRnd() < 0.5) {
+            chosenSubCategory = weightedRandom(emojiWeights[chosenCategory], seed);
+          } else {
+            chosenSubCategory = currentSubCategory || weightedRandom(emojiWeights[chosenCategory], seed);
+          }
         }
       }
-
-      if (Array.isArray(current)) {
-        return current;
-      } else if (typeof current === 'object') {
-        return getAllEmojis(current);
+      // choose emoji
+      const emoji = randomFromArray(emojiData[chosenCategory][chosenSubCategory], seed);
+      // avoid duplicates
+      const container = document.getElementById("emojiDisplay");
+      const currentEmojis = Array.from(container.children).map(e => e.textContent);
+      if (currentEmojis.includes(emoji)) {
+        // if already exists, try again
+        return drawEmoji(seed);
       }
-
-      return [];
-    }
-
-    function getTodayIndex() {
-      const today = new Date();
-      const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-      const seedrnd = new Math.seedrandom(seed);
-      return [
-        Math.floor(seedrnd(seed) * allEmojis.length),
-        Math.floor(seedrnd(seed) * allEmojis.length),
-        Math.floor(seedrnd(seed) * allEmojis.length)
-      ];
+      // update current category and subcategory
+      currentCategory = chosenCategory;
+      currentSubCategory = chosenSubCategory;
+      return emoji;
     }
 
     function handleClick(mode) {
       const now = Date.now();
-      if (mode !== lastMode || now - lastClickTime > 300) {
+      if (mode !== lastMode || now - lastClickTime > CLICK_TIMEOUT) {
         clickCount = 0;
         document.getElementById("emojiDisplay").textContent = '';
-        if (mode === 'today') todayEmojiCache = [];
       }
-      lastClickTime = now;
       lastMode = mode;
 
       const container = document.getElementById("emojiDisplay");
@@ -212,35 +285,30 @@
       if (mode === 'today') {
         clickCount = Math.min(clickCount + 1, 3);
         if (todayEmojiCache.length === 0) {
-          const indexes = getTodayIndex();
-          todayEmojiCache.push(allEmojis[indexes[0]]);
-          todayEmojiCache.push(allEmojis[(indexes[1]) % allEmojis.length]);
-          todayEmojiCache.push(allEmojis[(indexes[2]) % allEmojis.length]);
+          const today = new Date();
+          const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+          const seedVariantRnd = new Math.seedrandom(seed);
+          const offset = Math.floor(seedVariantRnd() * 100000000);
+          const seed2 = seed + offset;
+          const seed3 = seed + offset * 2;
+          todayEmojiCache.push(drawEmoji(seed));
+          todayEmojiCache.push(drawEmoji(seed2));
+          todayEmojiCache.push(drawEmoji(seed3));
         }
         displayEmojis(todayEmojiCache.slice(0, clickCount));
-        if (clickCount > 0) {
-          currentCategory = getCategory(todayEmojiCache[clickCount - 1]);
-        }
-      } else if (mode === 'same') {
-        if (currentEmojis.length === 0) return;
-        const lastEmoji = currentEmojis[currentEmojis.length - 1];
-        currentCategory = getCategory(lastEmoji);
-        if (!currentCategory) return;
-        if (currentEmojis.length >= 3) return;
-
-        const categoryEmojis = getEmojisInCategory(currentCategory);
-        if (categoryEmojis.length === 0) return;
-
-        const emoji = categoryEmojis[Math.floor(Math.random() * categoryEmojis.length)];
-        appendEmoji(emoji);
-        clickCount = currentEmojis.length + 1;
       } else if (mode === 'any') {
         if (currentEmojis.length >= 3) return;
-        const emoji = allEmojis[Math.floor(Math.random() * allEmojis.length)];
+        const emoji = drawEmoji();
         appendEmoji(emoji);
-        currentCategory = getCategory(emoji);
         clickCount = currentEmojis.length + 1;
       }
+      // update title
+      let children = container.childNodes;
+      let displayedEmojis = Array.from(children).map(e => e.textContent);
+      if (displayedEmojis.length > 0) {
+        document.title = displayedEmojis;
+      }
+      lastClickTime = now;
     }
 
     function displayEmojis(list) {
@@ -260,11 +328,7 @@
       container.appendChild(span);
     }
 
-    showTodayEmoji();
-    function showTodayEmoji() {
-      handleClick('today');
-      document.title = todayEmojiCache.length > 0 ? todayEmojiCache[0] : 'emoji wildcard';
-    }
+    handleClick('today');
   </script>
 </body>
 
