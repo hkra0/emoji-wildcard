@@ -249,7 +249,7 @@
           // same category
           chosenCategory = currentCategory;
           // choose subcategory
-          if (emojiRnd() < 0.5) {
+          if (emojiRnd() < 0.75) {
             chosenSubCategory = weightedRandom(emojiWeights[chosenCategory], seed);
           } else {
             chosenSubCategory = currentSubCategory || weightedRandom(emojiWeights[chosenCategory], seed);
