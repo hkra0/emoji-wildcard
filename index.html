@@ -289,11 +289,20 @@
           const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
           const seedVariantRnd = new Math.seedrandom(seed);
           const offset = Math.floor(seedVariantRnd() * 100000000);
-          const seed2 = seed + offset;
-          const seed3 = seed + offset * 2;
-          todayEmojiCache.push(drawEmoji(seed));
-          todayEmojiCache.push(drawEmoji(seed2));
-          todayEmojiCache.push(drawEmoji(seed3));
+          let seed2 = seed + offset;
+          let seed3 = seed + offset * 2;
+          emoji1 = drawEmoji(seed);
+          lastClickTime = now;
+          drawCount = 114514;
+          emoji2 = drawEmoji(seed2);
+          while (emoji1 === emoji2) {
+            emoji2 = drawEmoji(seed2++);
+          }
+          emoji3 = drawEmoji(seed3);
+          while (emoji1 === emoji3 || emoji2 === emoji3) {
+            emoji3 = drawEmoji(seed3++);
+          }
+          todayEmojiCache.push(emoji1, emoji2, emoji3);
         }
         displayEmojis(todayEmojiCache.slice(0, clickCount));
       } else if (mode === 'any') {
